@@ -44,14 +44,14 @@ pipeline {
                     }
                 }
 
-                    }
-
                 }
+
+            }
                 
             }
     post {
         always {
-            junit 'jest-results/junit.xml'
+            echo "hello world"
         }
     }
 }
