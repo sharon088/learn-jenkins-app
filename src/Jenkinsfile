@@ -5,7 +5,7 @@ pipeline {
         stage('w/o docker') {
             steps {
                 sh '''
-                    echo "aWithoutDocker"
+                    echo "WithoutDocker"
                     ls -la 
                     touch container-no.txt
                 '''
