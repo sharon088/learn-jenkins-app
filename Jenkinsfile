@@ -78,11 +78,11 @@ pipeline {
         stage('pass variable')
         {
             environment {
-                CI_ENVIRONMENT_URL = "$(env.STAGING_URL)"
+                CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
             }
             steps {
                 sh '''
-                    cho "CI_ENVIRONMENT_URL: $CI_ENVIRONMENT_URL"
+                    echo "CI_ENVIRONMENT_URL: $CI_ENVIRONMENT_URL"
                 '''
             }
         }
