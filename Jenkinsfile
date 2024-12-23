@@ -8,6 +8,24 @@ pipeline {
     }
 
     stages {
+        stage('AWS') {
+            agent {
+                docker {
+                    image 'amazon/aws-cli'
+                    args "--entrypoint=''"
+                }
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                    sh '''
+                        aws --version
+                        aws s3 ls
+                    s '''
+                }
+
+            }
+        }
+        /*
         stage('Build') {
             agent {
                 docker {
@@ -93,7 +111,7 @@ pipeline {
                     echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     netlify status
                     netlify deploy --dir=build --json > deploy-output.json
-                    CI_ENVIRONMENT_URL=$(node-jq -r '.deploy_url' deploy-output.json)
+                    CI_ENVIRONMENT_URL=$(jq -r '.deploy_url' deploy-output.json)
                     npx playwright test  --reporter=html
                 '''
             }
@@ -104,7 +122,7 @@ pipeline {
                 }
             }
         }
-
+        */
         /*
         stage('Approval') {
             steps {
@@ -114,7 +132,7 @@ pipeline {
             }
         }
         */
-
+        /*
         stage('Deploy prod') {
             agent {
                 docker {
@@ -144,5 +162,6 @@ pipeline {
                 }
             }
         }
+        */
     }
 }
