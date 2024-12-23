@@ -50,7 +50,52 @@ pipeline {
                     }
 
                 }
-            }        
+            }   
+
+        stage('Deploy To Staging')
+        {
+            agent {
+                docker{
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    npm install netlify-cli node-jq
+                    node_modules/.bin/netlify --version
+                    echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir==build --json > deploy-output.json
+                    
+                '''
+            }
+            script {
+                env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json",returnStdout: true)
+            }
+        }
+
+        stage('pass variable')
+        {
+            environment {
+                CI_ENVIRONMENT_URL = "$(env.STAGING_URL)"
+            }
+            steps {
+                sh '''
+                    cho "CI_ENVIRONMENT_URL: $CI_ENVIRONMENT_URL"
+                '''
+            }
+        }
+    
+        stage('Approval') {
+            steps {
+                timeout(time:15,unit: 'MINUTES')
+                {
+                    input message: 'Do you want deploy to production ? ', ok: 'Yes i am sure !'
+                }
+            }
+        }
+
         stage('Deploy')
         {
             agent {
@@ -65,6 +110,7 @@ pipeline {
                     node_modules/.bin/netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir==build --prod
                 '''
             }
         }
