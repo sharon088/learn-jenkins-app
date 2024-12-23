@@ -1,11 +1,11 @@
 pipeline {
     agent any
 
-    environment {
+   // environment {
         //NETLIFY_SITE_ID = '6c0603b1-b009-4741-8d76-1f7dc0074868'
         //NETLIFY_AUTH_TOKEN = credentials('netlify-token')
         //REACT_APP_VERSION = "1.0.$BUILD_ID"
-    }
+    //}
 
     stages {
         stage('AWS') {
