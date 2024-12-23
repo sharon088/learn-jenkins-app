@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        NETLIFY_SITE_ID = '6c0603b1-b009-4741-8d76-1f7dc0074868'
-        NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-        REACT_APP_VERSION = "1.0.$BUILD_ID"
+        //NETLIFY_SITE_ID = '6c0603b1-b009-4741-8d76-1f7dc0074868'
+        //NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+        //REACT_APP_VERSION = "1.0.$BUILD_ID"
     }
 
     stages {
@@ -20,7 +20,7 @@ pipeline {
                     sh '''
                         aws --version
                         aws s3 ls
-                    s '''
+                     '''
                 }
 
             }
